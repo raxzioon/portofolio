@@ -253,7 +253,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ onSelectProject }) => {
                     {/* Quick View Button on Image */}
                     <button
                       onClick={() => onSelectProject(project)}
-                      className="absolute top-3 right-3 p-2 rounded-full bg-slate-900/80 hover:bg-[#2c67ed] text-white border border-blue-500/40 transition-colors opacity-0 group-hover:opacity-100 shadow-lg"
+                      className="absolute top-3 right-3 p-2 rounded-full bg-slate-900/80 hover:bg-[#2c67ed] text-white border border-blue-500/40 transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 shadow-lg"
                       title="Lihat Detail Proyek"
                     >
                       <Sparkles className="w-4 h-4" />

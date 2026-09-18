@@ -47,57 +47,57 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           transition={{ type: 'spring', duration: 0.5, bounce: 0.15 }}
-          className="relative w-full max-w-3xl bg-[#080e26] border border-blue-500/40 rounded-3xl shadow-[0_0_50px_rgba(44,103,237,0.35)] overflow-hidden z-10 my-8"
+          className="relative w-full max-w-3xl bg-[#080e26] border border-blue-500/40 rounded-3xl shadow-[0_0_50px_rgba(44,103,237,0.35)] overflow-hidden z-10 my-4 sm:my-8 max-h-[92vh] flex flex-col"
         >
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-blue-500/30 transition-colors"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 p-2 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-blue-500/30 transition-colors shadow-lg"
             aria-label="Tutup Detail Proyek"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Project Preview Image */}
-          <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-slate-950">
+          <div className="relative h-44 sm:h-72 w-full overflow-hidden bg-slate-950 shrink-0">
             <img
               src={project.image}
               alt={project.title}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#080e26] via-[#080e26]/40 to-transparent" />
-            <div className="absolute bottom-4 left-6 right-6">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-600/90 text-white shadow-md mb-2">
+            <div className="absolute bottom-3 left-4 right-4 sm:bottom-4 sm:left-6 sm:right-6">
+              <span className="inline-block px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-blue-600/90 text-white shadow-md mb-1.5">
                 {project.category}
               </span>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-xl sm:text-3xl font-bold text-white font-['Space_Grotesk',sans-serif]">
                 {project.title}
               </h3>
             </div>
           </div>
 
           {/* Content Area */}
-          <div className="p-6 sm:p-8 space-y-6">
+          <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto">
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-cyan-300 mb-2 flex items-center gap-1.5">
+              <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-cyan-300 mb-1.5 sm:mb-2 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4" />
                 Tentang Proyek
               </h4>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
                 {project.longDescription}
               </p>
             </div>
 
             {/* Key Features */}
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-300 mb-3 flex items-center gap-1.5">
+              <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-blue-300 mb-2 sm:mb-3 flex items-center gap-1.5">
                 <Layers className="w-4 h-4" />
                 Fitur Utama & Keunggulan
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 {project.features.map((feature, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300 bg-blue-950/30 p-2.5 rounded-xl border border-blue-500/15">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                  <div key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300 bg-blue-950/30 p-2 sm:p-2.5 rounded-xl border border-blue-500/15">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -106,14 +106,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
 
             {/* Tech Stack Tags */}
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-2">
+              <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400 mb-1.5 sm:mb-2">
                 Teknologi yang Digunakan
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-lg bg-[#0d173b] border border-blue-500/30 text-xs sm:text-sm font-medium text-blue-300"
+                    className="px-2.5 py-1 rounded-lg bg-[#0d173b] border border-blue-500/30 text-xs sm:text-sm font-medium text-blue-300"
                   >
                     {tag}
                   </span>
@@ -122,13 +122,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
             </div>
 
             {/* External Links */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-blue-500/20">
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4 pt-3 sm:pt-4 border-t border-blue-500/20">
               {project.demoUrl && (
                 <a
                   href={project.demoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-[#2c67ed] text-white text-sm font-semibold flex items-center gap-2 shadow-[0_0_20px_rgba(44,103,237,0.5)] hover:shadow-[0_0_30px_rgba(44,103,237,0.7)] transition-all"
+                  className="w-full sm:w-auto justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-[#2c67ed] text-white text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-[0_0_20px_rgba(44,103,237,0.5)] hover:shadow-[0_0_30px_rgba(44,103,237,0.7)] transition-all"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Lihat Live Demo
@@ -139,7 +139,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-200 text-sm font-semibold border border-blue-500/30 flex items-center gap-2 transition-all"
+                  className="w-full sm:w-auto justify-center px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-semibold border border-blue-500/30 flex items-center gap-2 transition-all"
                 >
                   <GithubIcon className="w-4 h-4" />
                   Source Code di GitHub

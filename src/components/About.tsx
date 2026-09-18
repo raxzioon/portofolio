@@ -77,16 +77,16 @@ export const About: React.FC = () => {
       </div>
 
       {/* Profile & Bio Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center mb-16 sm:mb-20">
         {/* Profile Photo with Cosmic Neon Glow Ring */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="lg:col-span-5 flex flex-col items-center justify-center relative"
+          className="lg:col-span-5 flex flex-col items-center justify-center relative px-2"
         >
-          <div className="relative w-64 h-64 sm:w-72 sm:h-72">
+          <div className="relative w-56 h-56 sm:w-72 sm:h-72">
             {/* Spinning neon cosmic gradient border */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-[#2c67ed] via-cyan-400 to-indigo-600 blur-md opacity-75 animate-pulse" />
             <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-600 to-cyan-500 opacity-60 animate-[spin_10s_linear_infinite]" />
@@ -103,23 +103,23 @@ export const About: React.FC = () => {
 
             {/* Floating Cosmic Badge 1 */}
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -6, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="absolute -bottom-4 -left-4 px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-blue-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(44,103,237,0.4)] flex items-center gap-2 text-xs font-semibold text-white"
+              className="absolute -bottom-3 left-0 sm:-bottom-4 sm:-left-4 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl bg-slate-900/90 border border-blue-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(44,103,237,0.4)] flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-semibold text-white"
             >
-              <div className="w-6 h-6 rounded-full bg-blue-600/30 flex items-center justify-center text-cyan-300">
-                <Code2 className="w-3.5 h-3.5" />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-600/30 flex items-center justify-center text-cyan-300">
+                <Code2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </div>
               <span>Web Explorer</span>
             </motion.div>
 
             {/* Floating Cosmic Badge 2 */}
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 6, 0] }}
               transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
-              className="absolute -top-3 -right-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-cyan-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(56,189,248,0.3)] flex items-center gap-2 text-xs font-semibold text-cyan-300"
+              className="absolute -top-2.5 right-0 sm:-top-3 sm:-right-3 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-900/90 border border-cyan-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(56,189,248,0.3)] flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-semibold text-cyan-300"
             >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-400" />
               <span>Full-Stack Passion</span>
             </motion.div>
           </div>
@@ -131,9 +131,9 @@ export const About: React.FC = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="lg:col-span-7 flex flex-col gap-5"
+          className="lg:col-span-7 flex flex-col gap-4 sm:gap-5"
         >
-          <div className="space-y-4 text-slate-300 leading-relaxed text-base sm:text-lg">
+          <div className="space-y-3 sm:space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base lg:text-lg">
             {personalData.aboutDetailed.map((paragraph, index) => (
               <p key={index} className="text-slate-300">
                 {paragraph}
@@ -141,12 +141,12 @@ export const About: React.FC = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-blue-500/20 text-sm">
-            <div className="flex items-center gap-2.5 text-slate-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-4 border-t border-blue-500/20 text-xs sm:text-sm">
+            <div className="flex items-center gap-2 text-slate-300">
               <MapPin className="w-4 h-4 text-cyan-400 shrink-0" />
               <span>Lokasi: <strong className="text-white">{personalData.location}</strong></span>
             </div>
-            <div className="flex items-center gap-2.5 text-slate-300">
+            <div className="flex items-center gap-2 text-slate-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>Status: <strong className="text-emerald-300">Tersedia untuk Kontrak / Fulltime</strong></span>
             </div>
@@ -155,40 +155,42 @@ export const About: React.FC = () => {
       </div>
 
       {/* Project Statistics Section (Counters/Cards) */}
-      <div className="mb-24">
-        <div className="text-center mb-10">
-          <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center justify-center gap-2 font-['Space_Grotesk',sans-serif]">
-            <TrendingUp className="w-5 h-5 text-[#2c67ed]" />
+      <div className="mb-16 sm:mb-24">
+        <div className="text-center mb-8 sm:mb-10">
+          <h3 className="text-lg sm:text-2xl font-bold text-white flex items-center justify-center gap-2 font-['Space_Grotesk',sans-serif]">
+            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#2c67ed]" />
             Statistik & Metrik Kinerja
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {statsData.map((stat, idx) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
-              className="relative p-6 rounded-2xl bg-gradient-to-b from-[#09112a]/90 to-[#040816]/90 border border-blue-500/25 hover:border-blue-400/60 shadow-[0_4px_20px_rgba(44,103,237,0.15)] hover:shadow-[0_0_25px_rgba(44,103,237,0.35)] backdrop-blur-xl transition-all duration-300 group"
+              className="relative p-3.5 sm:p-6 rounded-2xl bg-gradient-to-b from-[#09112a]/90 to-[#040816]/90 border border-blue-500/25 hover:border-blue-400/60 shadow-[0_4px_20px_rgba(44,103,237,0.15)] hover:shadow-[0_0_25px_rgba(44,103,237,0.35)] backdrop-blur-xl transition-all duration-300 group flex flex-col justify-between"
             >
               {/* Glow Accent Top Bar */}
-              <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-[#2c67ed] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 left-4 right-4 sm:left-6 sm:right-6 h-[2px] bg-gradient-to-r from-transparent via-[#2c67ed] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-cyan-300 font-['Space_Grotesk',sans-serif]">
-                  {stat.value}
-                </span>
-                <span className="text-3xl font-extrabold text-[#2c67ed]">
-                  {stat.suffix}
-                </span>
+              <div>
+                <div className="flex items-baseline gap-1 mb-1 sm:mb-2">
+                  <span className="text-2xl sm:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-cyan-300 font-['Space_Grotesk',sans-serif]">
+                    {stat.value}
+                  </span>
+                  <span className="text-lg sm:text-3xl font-extrabold text-[#2c67ed]">
+                    {stat.suffix}
+                  </span>
+                </div>
+                <h4 className="text-xs sm:text-base font-bold text-slate-200 mb-1">
+                  {stat.label}
+                </h4>
               </div>
-              <h4 className="text-base font-bold text-slate-200 mb-1">
-                {stat.label}
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-400 leading-snug">
+              <p className="text-[10px] sm:text-xs text-slate-400 leading-snug line-clamp-2 sm:line-clamp-none">
                 {stat.description}
               </p>
             </motion.div>

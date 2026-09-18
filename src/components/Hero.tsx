@@ -9,8 +9,27 @@ import {
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon } from './SocialIcons';
 import { personalData } from '../data/portfolioData';
+import { getCustomAvatar } from '../lib/supabase';
 
 export const Hero: React.FC = () => {
+  // Avatar state reactive to admin uploads
+  const [avatarUrl, setAvatarUrl] = useState<string>(() => {
+    return getCustomAvatar() || personalData.avatarUrl;
+  });
+
+  useEffect(() => {
+    const handleAvatarUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<string | null>;
+      if (customEvent.detail) {
+        setAvatarUrl(customEvent.detail);
+      } else {
+        setAvatarUrl(getCustomAvatar() || personalData.avatarUrl);
+      }
+    };
+    window.addEventListener('avatar-updated', handleAvatarUpdate);
+    return () => window.removeEventListener('avatar-updated', handleAvatarUpdate);
+  }, []);
+
   // Typewriter effect state
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
@@ -56,157 +75,188 @@ export const Hero: React.FC = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToAbout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section 
       id="home" 
-      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative min-h-[calc(100vh-4rem)] sm:min-h-screen flex items-center justify-center pt-24 pb-12 sm:pt-32 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
       {/* Background Cosmic Glow Spots */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-[#2c67ed]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/4 w-[250px] h-[250px] bg-cyan-500/10 rounded-full blur-[90px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[650px] h-[320px] sm:h-[650px] bg-[#2c67ed]/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[200px] h-[200px] bg-cyan-500/10 rounded-full blur-[90px] pointer-events-none" />
       
       {/* Orbit Rings (Aesthetic SVG Background) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-        <div className="w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] rounded-full border border-blue-500/30 animate-[spin_60s_linear_infinite]" />
-        <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full border border-dashed border-cyan-400/20 animate-[spin_40s_linear_infinite_reverse]" />
+        <div className="w-[450px] h-[450px] sm:w-[750px] sm:h-[750px] rounded-full border border-blue-500/30 animate-[spin_60s_linear_infinite]" />
+        <div className="absolute w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full border border-dashed border-cyan-400/20 animate-[spin_40s_linear_infinite_reverse]" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center w-full">
+        {/* Glowing Profile Avatar with Cosmic Neon Ring */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative mb-4 group cursor-pointer"
+          onClick={scrollToAbout}
+          title="Lihat Tentang Saya"
+        >
+          <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full p-[2.5px] bg-gradient-to-tr from-[#2c67ed] via-cyan-400 to-indigo-600 shadow-[0_0_25px_rgba(44,103,237,0.55)] group-hover:scale-105 transition-transform duration-300">
+            <div className="w-full h-full rounded-full overflow-hidden bg-slate-950 border border-blue-400/50">
+              <img
+                src={avatarUrl}
+                alt={personalData.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            {/* Online Status Pulsing Dot */}
+            <span className="absolute bottom-0 right-0 flex h-3.5 w-3.5 sm:h-4 sm:w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-[#060b1e]"></span>
+            </span>
+          </div>
+        </motion.div>
+
         {/* Status Badge */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-900/80 border border-blue-500/30 text-xs sm:text-sm text-blue-300 mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(44,103,237,0.25)]"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900/90 border border-blue-500/30 text-[11px] sm:text-xs text-blue-300 mb-4 backdrop-blur-md shadow-[0_0_15px_rgba(44,103,237,0.25)]"
         >
-          <span className="relative flex h-2.5 w-2.5">
+          <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
           <span className="font-medium text-slate-300 tracking-wide">{personalData.status}</span>
         </motion.div>
 
         {/* Large Name with Cosmic Glow */}
         <motion.h1
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-4 font-['Space_Grotesk',sans-serif]"
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-2 font-['Space_Grotesk',sans-serif] px-2"
         >
           Hi, Saya{' '}
-          <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-[#2c67ed] to-cyan-300 drop-shadow-[0_0_25px_rgba(44,103,237,0.7)]">
+          <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-[#2c67ed] to-cyan-300 drop-shadow-[0_0_20px_rgba(44,103,237,0.7)]">
             {personalData.name}
           </span>
         </motion.h1>
 
-        {/* Typewriter Title */}
+        {/* Stable Height Typewriter Container (Zero Layout Shift) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="h-12 sm:h-16 flex items-center justify-center gap-2 mb-6"
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="min-h-[48px] sm:min-h-[56px] flex items-center justify-center gap-1.5 mb-3 px-2 text-center"
         >
-          <span className="text-xl sm:text-3xl md:text-4xl font-semibold text-slate-300 flex items-center">
+          <span className="text-base sm:text-2xl md:text-3xl font-semibold text-slate-300 flex items-center flex-wrap justify-center">
             Seorang{' '}
             <span className="text-[#38bdf8] font-bold ml-2 font-mono drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]">
               {currentText}
             </span>
-            <span className="inline-block w-1 h-7 sm:h-9 bg-[#2c67ed] ml-1 animate-pulse shadow-[0_0_8px_#2c67ed]" />
+            <span className="inline-block w-0.5 sm:w-1 h-5 sm:h-7 bg-[#2c67ed] ml-1 animate-pulse shadow-[0_0_8px_#2c67ed]" />
           </span>
         </motion.div>
 
         {/* Short Bio */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-2xl text-base sm:text-lg text-slate-400 leading-relaxed mb-8 px-2"
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="max-w-2xl text-xs sm:text-base text-slate-400 leading-relaxed mb-7 px-3 sm:px-0"
         >
           {personalData.bio}
         </motion.p>
 
-        {/* Action Buttons */}
+        {/* Action Buttons: Mobile-First Precision Grid */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-4 mb-12"
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-sm sm:max-w-none mb-8 px-2"
         >
           {/* Primary Glow Button */}
           <a
             href="#portfolio"
             onClick={scrollToPortfolio}
-            className="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-[#2c67ed] text-white font-semibold text-sm sm:text-base flex items-center gap-2.5 shadow-[0_0_25px_rgba(44,103,237,0.6)] hover:shadow-[0_0_35px_rgba(44,103,237,0.85)] hover:scale-105 active:scale-95 transition-all duration-300 group"
+            className="w-full sm:w-auto px-7 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-[#2c67ed] text-white font-semibold text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(44,103,237,0.5)] hover:shadow-[0_0_30px_rgba(44,103,237,0.8)] hover:scale-105 active:scale-95 transition-all duration-300 group"
           >
             <span>Jelajahi Portfolio</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
 
-          {/* Secondary Ghost Button */}
-          <a
-            href="#contact"
-            onClick={scrollToContact}
-            className="px-7 py-3.5 rounded-full bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 font-semibold text-sm sm:text-base border border-blue-500/30 hover:border-blue-400/60 flex items-center gap-2.5 backdrop-blur-md shadow-[0_0_15px_rgba(44,103,237,0.15)] hover:shadow-[0_0_20px_rgba(44,103,237,0.3)] hover:scale-105 active:scale-95 transition-all duration-300"
-          >
-            <Send className="w-4 h-4 text-cyan-400" />
-            <span>Hubungi Saya</span>
-          </a>
+          {/* Secondary Buttons Row on Mobile */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <a
+              href="#contact"
+              onClick={scrollToContact}
+              className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold text-xs sm:text-sm border border-blue-500/30 hover:border-blue-400/60 flex items-center justify-center gap-2 backdrop-blur-md shadow-[0_0_12px_rgba(44,103,237,0.15)] active:scale-95 transition-all duration-300"
+            >
+              <Send className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Hubungi Saya</span>
+            </a>
 
-          {/* CV Button */}
-          <a
-            href="#contact"
-            onClick={scrollToContact}
-            className="px-5 py-3.5 rounded-full bg-blue-950/40 hover:bg-blue-900/40 text-blue-300 font-medium text-sm sm:text-base border border-blue-500/20 hover:border-blue-400/40 flex items-center gap-2 transition-all duration-300"
-            title="Download CV"
-          >
-            <FileDown className="w-4 h-4" />
-            <span>Unduh CV</span>
-          </a>
+            <a
+              href="#contact"
+              onClick={scrollToContact}
+              className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-full bg-blue-950/40 hover:bg-blue-900/40 text-blue-300 font-medium text-xs sm:text-sm border border-blue-500/20 hover:border-blue-400/40 flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-300"
+              title="Download CV"
+            >
+              <FileDown className="w-3.5 h-3.5" />
+              <span>Unduh CV</span>
+            </a>
+          </div>
         </motion.div>
 
         {/* Quick Social & Tech Badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 border-t border-blue-500/15 w-full max-w-xl"
+          transition={{ duration: 0.5, delay: 0.55 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-5 border-t border-blue-500/15 w-full max-w-lg"
         >
           {/* Social icons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <span className="text-xs text-slate-500 font-medium">Follow:</span>
             <a
               href={personalData.socials.github}
               target="_blank"
               rel="noreferrer"
-              className="p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
+              className="p-2 sm:p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
               aria-label="GitHub"
             >
-              <GithubIcon className="w-4 h-4" />
+              <GithubIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </a>
             <a
               href={personalData.socials.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
+              className="p-2 sm:p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
               aria-label="LinkedIn"
             >
-              <LinkedinIcon className="w-4 h-4" />
+              <LinkedinIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </a>
             <a
               href={personalData.socials.instagram}
               target="_blank"
               rel="noreferrer"
-              className="p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
+              className="p-2 sm:p-2.5 rounded-full bg-slate-900/80 border border-blue-500/20 text-slate-400 hover:text-white hover:border-blue-400 hover:shadow-[0_0_12px_rgba(44,103,237,0.5)] transition-all"
               aria-label="Instagram"
             >
-              <InstagramIcon className="w-4 h-4" />
+              <InstagramIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </a>
           </div>
 
           <div className="hidden sm:block w-px h-5 bg-blue-500/20" />
 
           {/* Quick Cosmic Highlights */}
-          <div className="flex items-center gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-slate-400">
             <span className="flex items-center gap-1.5">
               <Code2 className="w-3.5 h-3.5 text-[#2c67ed]" />
               Laravel & Docker
