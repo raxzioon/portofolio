@@ -9,26 +9,7 @@ import {
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon } from './SocialIcons';
 import { personalData } from '../data/portfolioData';
-import { getCustomAvatar } from '../lib/supabase';
-
 export const Hero: React.FC = () => {
-  // Avatar state reactive to admin uploads
-  const [avatarUrl, setAvatarUrl] = useState<string>(() => {
-    return getCustomAvatar() || personalData.avatarUrl;
-  });
-
-  useEffect(() => {
-    const handleAvatarUpdate = (e: Event) => {
-      const customEvent = e as CustomEvent<string | null>;
-      if (customEvent.detail) {
-        setAvatarUrl(customEvent.detail);
-      } else {
-        setAvatarUrl(getCustomAvatar() || personalData.avatarUrl);
-      }
-    };
-    window.addEventListener('avatar-updated', handleAvatarUpdate);
-    return () => window.removeEventListener('avatar-updated', handleAvatarUpdate);
-  }, []);
 
   // Typewriter effect state
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -75,11 +56,6 @@ export const Hero: React.FC = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToAbout = (e: React.MouseEvent) => {
-    e.preventDefault();
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section 
       id="home" 
@@ -96,30 +72,6 @@ export const Hero: React.FC = () => {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center w-full">
-        {/* Glowing Profile Avatar with Cosmic Neon Ring */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="relative mb-4 group cursor-pointer"
-          onClick={scrollToAbout}
-          title="Lihat Tentang Saya"
-        >
-          <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full p-[2.5px] bg-gradient-to-tr from-[#2c67ed] via-cyan-400 to-indigo-600 shadow-[0_0_25px_rgba(44,103,237,0.55)] group-hover:scale-105 transition-transform duration-300">
-            <div className="w-full h-full rounded-full overflow-hidden bg-slate-950 border border-blue-400/50">
-              <img
-                src={avatarUrl}
-                alt={personalData.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-            {/* Online Status Pulsing Dot */}
-            <span className="absolute bottom-0 right-0 flex h-3.5 w-3.5 sm:h-4 sm:w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-[#060b1e]"></span>
-            </span>
-          </div>
-        </motion.div>
 
         {/* Status Badge */}
         <motion.div
