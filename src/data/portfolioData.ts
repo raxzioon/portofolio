@@ -80,7 +80,7 @@ export const personalData = {
   phone: "+62 819-0660-2421",
   whatsappUrl: "https://wa.me/6281906602421",
   socials: {
-    github: "https://github.com/",
+    github: "https://github.com/raxzioon",
     linkedin: "https://linkedin.com/in/adzka-arroya-2789212a1",
     instagram: "https://instagram.com/",
     discord: "https://discord.com/",
