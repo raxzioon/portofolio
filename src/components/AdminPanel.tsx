@@ -95,8 +95,8 @@ export const AdminPanel: React.FC = () => {
     try {
       const compressed = await compressImage(file, 800, 800, 0.88);
       setAvatarPreview(compressed);
-      saveCustomAvatar(compressed);
-      setAvatarSuccessMsg('Foto profil berhasil diunggah dan langsung aktif di bagian Tentang Saya!');
+      await saveCustomAvatar(compressed);
+      setAvatarSuccessMsg('Foto profil berhasil diunggah dan disinkronkan ke database!');
       setTimeout(() => setAvatarSuccessMsg(''), 5000);
     } catch (err) {
       console.error(err);
@@ -106,18 +106,19 @@ export const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleApplyUrl = () => {
+  const handleApplyUrl = async () => {
     if (!avatarUrlInput.trim()) return;
-    setAvatarPreview(avatarUrlInput.trim());
-    saveCustomAvatar(avatarUrlInput.trim());
-    setAvatarSuccessMsg('Tautan foto profil berhasil disimpan dan diterapkan!');
+    const url = avatarUrlInput.trim();
+    setAvatarPreview(url);
+    await saveCustomAvatar(url);
+    setAvatarSuccessMsg('Tautan foto profil berhasil disimpan dan disinkronkan ke database!');
     setAvatarUrlInput('');
     setTimeout(() => setAvatarSuccessMsg(''), 5000);
   };
 
-  const handleResetAvatar = () => {
+  const handleResetAvatar = async () => {
     if (confirm('Kembalikan foto profil ke foto awal?')) {
-      resetCustomAvatar();
+      await resetCustomAvatar();
       setAvatarPreview(personalData.avatarUrl);
       setAvatarSuccessMsg('Foto profil berhasil dikembalikan ke foto bawaan.');
       setTimeout(() => setAvatarSuccessMsg(''), 4000);
@@ -146,9 +147,9 @@ export const AdminPanel: React.FC = () => {
 
     try {
       const compressed = await compressImage(file, 1000, 600, 0.88);
-      saveCustomProjectImage(projectId, compressed);
+      await saveCustomProjectImage(projectId, compressed);
       setCustomProjectImages((prev) => ({ ...prev, [projectId]: compressed }));
-      setProjectSuccessMsg(`Foto untuk proyek "${projectTitle}" berhasil diubah!`);
+      setProjectSuccessMsg(`Foto untuk proyek "${projectTitle}" berhasil disimpan dan disinkronkan ke database!`);
       setTimeout(() => setProjectSuccessMsg(''), 5000);
     } catch (err) {
       console.error(err);
@@ -158,20 +159,20 @@ export const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleProjectUrlApply = (projectId: string, projectTitle: string) => {
+  const handleProjectUrlApply = async (projectId: string, projectTitle: string) => {
     const url = projectUrlInputs[projectId]?.trim();
     if (!url) return;
 
-    saveCustomProjectImage(projectId, url);
+    await saveCustomProjectImage(projectId, url);
     setCustomProjectImages((prev) => ({ ...prev, [projectId]: url }));
-    setProjectSuccessMsg(`Foto untuk proyek "${projectTitle}" berhasil diperbarui dari URL!`);
+    setProjectSuccessMsg(`Foto untuk proyek "${projectTitle}" berhasil disimpan ke database dari URL!`);
     setProjectUrlInputs((prev) => ({ ...prev, [projectId]: '' }));
     setTimeout(() => setProjectSuccessMsg(''), 5000);
   };
 
-  const handleResetProject = (projectId: string, projectTitle: string) => {
+  const handleResetProject = async (projectId: string, projectTitle: string) => {
     if (confirm(`Kembalikan foto proyek "${projectTitle}" ke foto awal?`)) {
-      resetCustomProjectImage(projectId);
+      await resetCustomProjectImage(projectId);
       setCustomProjectImages((prev) => {
         const copy = { ...prev };
         delete copy[projectId];
@@ -339,7 +340,14 @@ CREATE TABLE IF NOT EXISTS visitor_logs (
   screen_size TEXT
 );
 
--- 3. Kebijakan Keamanan (Row Level Security)
+-- 3. Buat Tabel Foto & Pengaturan Portofolio (Sinkronisasi Semua Perangkat)
+CREATE TABLE IF NOT EXISTS portfolio_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 4. Kebijakan Keamanan (Row Level Security)
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public insert messages" ON contact_messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public select messages" ON contact_messages FOR SELECT USING (true);
@@ -348,7 +356,13 @@ CREATE POLICY "Public delete messages" ON contact_messages FOR DELETE USING (tru
 
 ALTER TABLE visitor_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public insert visitors" ON visitor_logs FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public select visitors" ON visitor_logs FOR SELECT USING (true);`;
+CREATE POLICY "Public select visitors" ON visitor_logs FOR SELECT USING (true);
+
+ALTER TABLE portfolio_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public select settings" ON portfolio_settings FOR SELECT USING (true);
+CREATE POLICY "Public insert settings" ON portfolio_settings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update settings" ON portfolio_settings FOR UPDATE USING (true);
+CREATE POLICY "Public delete settings" ON portfolio_settings FOR DELETE USING (true);`;
 
   const copySql = () => {
     navigator.clipboard.writeText(sqlSnippet);

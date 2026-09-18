@@ -8,15 +8,16 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
 import { AdminPanel } from './components/AdminPanel';
-import { recordVisitor } from './lib/supabase';
+import { recordVisitor, syncRemoteSettings } from './lib/supabase';
 import type { ProjectItem } from './data/portfolioData';
 
 export const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
-  // Record visitor session on page load
+  // Record visitor session and sync remote settings on page load
   useEffect(() => {
     recordVisitor();
+    syncRemoteSettings();
   }, []);
 
   return (

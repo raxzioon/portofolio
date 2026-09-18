@@ -36,18 +36,44 @@ export const getCustomProjectImages = (): Record<string, string> => {
   }
 };
 
-export const saveCustomProjectImage = (projectId: string, imageUrl: string): void => {
+export const saveCustomProjectImage = async (projectId: string, imageUrl: string): Promise<void> => {
   const current = getCustomProjectImages();
   current[projectId] = imageUrl;
   localStorage.setItem(PROJECT_IMAGES_STORAGE_KEY, JSON.stringify(current));
   window.dispatchEvent(new CustomEvent('projects-updated', { detail: current }));
+
+  const client = getSupabaseClient();
+  if (client) {
+    try {
+      await client.from('portfolio_settings').upsert({
+        key: 'project_images',
+        value: JSON.stringify(current),
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error('Failed to sync project images to Supabase:', err);
+    }
+  }
 };
 
-export const resetCustomProjectImage = (projectId: string): void => {
+export const resetCustomProjectImage = async (projectId: string): Promise<void> => {
   const current = getCustomProjectImages();
   delete current[projectId];
   localStorage.setItem(PROJECT_IMAGES_STORAGE_KEY, JSON.stringify(current));
   window.dispatchEvent(new CustomEvent('projects-updated', { detail: current }));
+
+  const client = getSupabaseClient();
+  if (client) {
+    try {
+      await client.from('portfolio_settings').upsert({
+        key: 'project_images',
+        value: JSON.stringify(current),
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error('Failed to update project images on Supabase:', err);
+    }
+  }
 };
 
 export const getMergedProjectsData = (): ProjectItem[] => {
@@ -67,14 +93,66 @@ export const getCustomAvatar = (): string | null => {
   return localStorage.getItem(AVATAR_STORAGE_KEY);
 };
 
-export const saveCustomAvatar = (avatarDataUrl: string): void => {
+export const saveCustomAvatar = async (avatarDataUrl: string): Promise<void> => {
   localStorage.setItem(AVATAR_STORAGE_KEY, avatarDataUrl);
   window.dispatchEvent(new CustomEvent('avatar-updated', { detail: avatarDataUrl }));
+
+  const client = getSupabaseClient();
+  if (client) {
+    try {
+      await client.from('portfolio_settings').upsert({
+        key: 'avatar_url',
+        value: avatarDataUrl,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error('Failed to sync avatar to Supabase:', err);
+    }
+  }
 };
 
-export const resetCustomAvatar = (): void => {
+export const resetCustomAvatar = async (): Promise<void> => {
   localStorage.removeItem(AVATAR_STORAGE_KEY);
   window.dispatchEvent(new CustomEvent('avatar-updated', { detail: null }));
+
+  const client = getSupabaseClient();
+  if (client) {
+    try {
+      await client.from('portfolio_settings').delete().eq('key', 'avatar_url');
+    } catch (err) {
+      console.error('Failed to reset avatar on Supabase:', err);
+    }
+  }
+};
+
+/**
+ * Sync settings (avatar, project images) from Supabase across all devices & visitors
+ */
+export const syncRemoteSettings = async (): Promise<void> => {
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  try {
+    const { data, error } = await client.from('portfolio_settings').select('*');
+    if (!error && data && data.length > 0) {
+      for (const item of data) {
+        if (item.key === 'avatar_url' && item.value) {
+          localStorage.setItem(AVATAR_STORAGE_KEY, item.value);
+          window.dispatchEvent(new CustomEvent('avatar-updated', { detail: item.value }));
+        } else if (item.key === 'project_images' && item.value) {
+          localStorage.setItem(PROJECT_IMAGES_STORAGE_KEY, item.value);
+          try {
+            const parsed = JSON.parse(item.value);
+            window.dispatchEvent(new CustomEvent('projects-updated', { detail: parsed }));
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Could not sync remote portfolio settings from Supabase:', err);
+  }
 };
 
 export const compressImage = (file: File, maxWidth = 800, maxHeight = 800, quality = 0.85): Promise<string> => {

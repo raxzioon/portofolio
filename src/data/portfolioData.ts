@@ -74,7 +74,7 @@ export const personalData = {
     "Saya memiliki rekam jejak teruji dalam merancang dan mengembangkan platform web skalabel menggunakan arsitektur Laravel, Livewire, Docker Sail, dan MySQL, termasuk sistem layanan publik yang melayani lebih dari 4.500 warga di Desa Denanyar.",
     "Selain rekayasa perangkat lunak, saya aktif berkontribusi dalam riset algoritma Machine Learning di PUI-PT AICOMS Telkom University, serta mengajar pemrograman game 3D & computational thinking berbasis Lua di Ruangguru (Roblox Scholarship Program). Saya juga seorang Hafidz 30 Juz Al-Qur'an dari Pondok Tahfidz Sulaimaniyah."
   ],
-  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+  avatarUrl: "/avatar.png",
   resumeUrl: "#",
   email: "yakokapa@gmail.com",
   phone: "+62 819-0660-2421",
