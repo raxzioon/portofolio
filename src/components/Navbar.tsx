@@ -67,12 +67,12 @@ export const Navbar: React.FC = () => {
   return (
     <>
       {/* Floating Center Top Navbar */}
-      <header className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-4xl transition-all duration-300">
+      <header className="fixed top-3 sm:top-5 left-1/2 -translate-x-1/2 z-50 w-[94%] sm:w-[92%] max-w-4xl transition-all duration-300">
         <motion.nav
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className={`relative px-4 sm:px-6 py-3 rounded-full flex items-center justify-between border transition-all duration-300
+          className={`relative px-3.5 sm:px-6 py-2 sm:py-3 rounded-full flex items-center justify-between border transition-all duration-300
             ${
               isScrolled 
                 ? 'bg-[#060b1e]/85 backdrop-blur-xl border-blue-500/40 shadow-[0_0_25px_rgba(44,103,237,0.4)]' 
